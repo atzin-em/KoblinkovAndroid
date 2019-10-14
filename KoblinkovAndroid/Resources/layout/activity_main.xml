@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+    
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:id="@+id/TxtView_Title"
+            android:paddingTop="50dp"
+            android:textAlignment="center"
+            android:textSize="45dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="120dp"
+            android:layout_marginTop="160dp">
+
+
+            <ImageView
+                android:paddingBottom="2dp"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:id="@+id/Start_Btn"/>
+
+            <!--<Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Start_Btn"
+                android:text="@string/start_string"/>-->
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:paddingTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:padding="2dp"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:id="@+id/Easy_Btn"/>
+
+            <ImageView
+                android:padding="2dp"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:id="@+id/Normal_Btn"/>
+
+            <ImageView
+                android:padding="2dp"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:id="@+id/Hard_Btn"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp">
+
+            
+            <ImageView
+                android:paddingBottom="2dp"
+                android:layout_width="120dp"
+                android:layout_height="60dp"
+                android:id="@+id/Settings_Btn"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>
