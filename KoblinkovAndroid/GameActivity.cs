@@ -18,6 +18,7 @@ namespace KoblinkovAndroid
     {
         public Timer TimeTimer = new Timer();
 
+        public bool firsttouch = true;
         public int Cur_Turns = 0;
         public DateTime Cur_Time = new DateTime(1,1,1,0,0,0);
         public List<Tuple<int[], ImageView>> BarCoords = new List<Tuple<int[], ImageView>>() { };
@@ -25,6 +26,8 @@ namespace KoblinkovAndroid
         public GridLayout Obj_Game_Grid;
         public TextView TimeScore;
         public TextView TurnScore;
+        float ScreenHeight;
+        float ScreenWidth;
         public int cur_int;
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -33,8 +36,13 @@ namespace KoblinkovAndroid
             SetContentView(Resource.Layout.activity_game);
             Obj_Game_Mode = Intent.GetSerializableExtra("Mode");
             Typeface KremlinTF = Typeface.CreateFromAsset(this.Assets, "kremlin.ttf");
-            //TimeTimer.Interval = 1000;
-            //TimeTimer.Elapsed += TimerEventProcessor();
+            TimeTimer.Interval = 1000;
+            TimeTimer.Elapsed += TimeTimer_Elapsed;
+                
+            ScreenHeight = (Resources.DisplayMetrics.HeightPixels);
+            ScreenWidth =  (Resources.DisplayMetrics.WidthPixels);
+
+            //Console.WriteLine("SCREEN HEIGHT IS {0} /n SCREEN WIDTH IS {1}", ScreenHeight, ScreenWidth);
 
             // Declaring views from activity
             Obj_Game_Grid = (GridLayout)FindViewById(Resource.Id.Game_Grid);
@@ -50,15 +58,19 @@ namespace KoblinkovAndroid
 
             CreateGridFromMode(Obj_Game_Mode.ToString());
             Randomizer(Obj_Game_Mode.ToString());
+            
 
         }
 
-        //private ElapsedEventHandler TimerEventProcessor()
-        //{
-        //    Cur_Time = Cur_Time.AddSeconds(1);
-        //    TimeScore.Text = Cur_Time.ToString("mm:ss");
-        //    return new ElapsedEventHandler(this;
-        //}
+        private void TimeTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            TimeScore.Text = "Time: " + Cur_Time.ToString("mm:ss");
+            Cur_Time = Cur_Time.AddSeconds(1);
+            //Console.WriteLine(Cur_Time.ToString("mm:ss"));
+
+
+        }
+
         public void CreateGridFromMode(string mode)
         {
 
@@ -73,31 +85,32 @@ namespace KoblinkovAndroid
             SelectedSize = GridSizeDictionary[mode];
 
             ViewGroup.LayoutParams ImgParams = new ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.FillParent, 
+                ViewGroup.LayoutParams.FillParent,
                 ViewGroup.LayoutParams.FillParent);
 
 
-            
+
             cur_int = SelectedSize[0];
             Obj_Game_Grid.ColumnCount = SelectedSize[1];
             Obj_Game_Grid.RowCount = SelectedSize[0];
 
             if (mode == "Easy")
             {
-                ImgParams.Width = 160;
-                ImgParams.Height = 280;
+                
+                ImgParams.Width = 320;
+                ImgParams.Height = 560;
             }
             else if (mode == "Normal")
             {
-                ImgParams.Width = 160;
-                ImgParams.Height = 180;
+                ImgParams.Width = 320;
+                ImgParams.Height = 360;
             }
             else if (mode == "Hard")
             {
-                ImgParams.Width = 160;
-                ImgParams.Height = 135;
+                ImgParams.Width = 320;
+                ImgParams.Height = 260;
             }
-
+            
             for (int i = 0; i < GridSizeDictionary[mode][0]; i++)
             {
                 for (int x = 0; x < GridSizeDictionary[mode][1]; x++)
@@ -107,15 +120,15 @@ namespace KoblinkovAndroid
 
                     if (mode == "Easy")
                     {
-                        BarImg.SetPadding(5, 5, 5, 5);
+                        BarImg.SetPadding(5, 0, 5, 0);
                     }
                     else if (mode == "Normal")
                     {
-                        BarImg.SetPadding(10, 5, 10, 5);
+                        BarImg.SetPadding(15, 10, 15, 10);
                     }
                     else if (mode == "Hard")
                     {
-                        BarImg.SetPadding(15, 10, 15, 10);
+                        BarImg.SetPadding(35, 15, 35, 15);
                     }
                     BarImg.SetImageResource(Resource.Drawable.bar);
                     BarImg.Id = int.Parse(x + "99" + i);
@@ -123,6 +136,7 @@ namespace KoblinkovAndroid
                     Obj_Game_Grid.AddView(BarImg);
                     BarImg.Touch += Obj_BarImg_Touch;
                     //BarImg.
+                    BarImg.Rotation = 0;
                     BarCoords.Add(new Tuple<int[], ImageView>(
                         new int[] { i, x },
                         BarImg));
@@ -134,15 +148,15 @@ namespace KoblinkovAndroid
         {
             if (mode == "Easy")
             {
-                RandomSelect(20);
+                RandomSelect(33);
             }
             else if (mode == "Normal")
             {
-                RandomSelect(40);
+                RandomSelect(66);
             }
             else if (mode == "Hard")
             {
-                RandomSelect(200);
+                RandomSelect(99);
             }
         }
 
@@ -160,6 +174,13 @@ namespace KoblinkovAndroid
 
         private void RotateBars(int x, int y, bool AnimateBars)
         {
+            if (AnimateBars == true)
+            {
+                //Cur_Turns += 1;
+                //Context context = this;
+                // Get the Resources object from our context
+                //TurnScore.Text = "Turns: " + Cur_Turns.ToString();
+            }
             Console.WriteLine("RotateBars was called with params x:{0} y:{1}", x, y);
             for (int i = 0; i < BarCoords.Count; i++)
             {
@@ -175,7 +196,6 @@ namespace KoblinkovAndroid
                         {
                             BarCoords[i].Item2.Rotation = 0;
                         }
-                        
                     }
                     else if (BarCoords[i].Item2.Rotation == 0)
                     {
@@ -190,6 +210,31 @@ namespace KoblinkovAndroid
                     }
                 }
                 if (BarCoords[i].Item1[1] == y)
+                {
+                    if (BarCoords[i].Item2.Rotation == 90)
+                    {
+                        if (AnimateBars == true)
+                        {
+                            BarCoords[i].Item2.Animate().Rotation(0);
+                        }
+                        else
+                        {
+                            BarCoords[i].Item2.Rotation = 0;
+                        }
+                    }
+                    else if (BarCoords[i].Item2.Rotation == 0)
+                    {
+                        if (AnimateBars == true)
+                        {
+                            BarCoords[i].Item2.Animate().Rotation(90);
+                        }
+                        else
+                        {
+                            BarCoords[i].Item2.Rotation = 90;
+                        }
+                    }
+                }
+                if (BarCoords[i].Item1[0] == x && BarCoords[i].Item1[1] == y)
                 {
                     if (BarCoords[i].Item2.Rotation == 90)
                     {
@@ -229,8 +274,6 @@ namespace KoblinkovAndroid
                 else if (BarCoords[i].Item2.Rotation == 90)
                 {
                     BarsCorrect = false;
-                    
-                    
                 }
             }
             return BarsCorrect;
@@ -238,10 +281,13 @@ namespace KoblinkovAndroid
 
         private void Obj_BarImg_Touch(object sender, View.TouchEventArgs e)
         {
+            if (firsttouch == true)
+            {
+                TimeTimer.Start();
+                firsttouch = !firsttouch;
+            }
             if (e.Event.Action == MotionEventActions.Up)
             {
-                ImageView TouchedBar = (ImageView)sender;
-
                 for (int i = 0; i < BarCoords.Count; i++)
                 {
                     if (BarCoords[i].Item2 == sender)
@@ -249,7 +295,7 @@ namespace KoblinkovAndroid
                         Console.WriteLine("Coords of the touched bar x:{0} y:{1}", BarCoords[i].Item1[0], BarCoords[i].Item1[1]);
                         //Console.WriteLine(TouchedBar.Id);
                         //Console.WriteLine(BarCoords[i].Item2.Rotation);
-                        RotateBars(BarCoords[i].Item1[0], BarCoords[i].Item1[1], true);
+                        RotateBars(BarCoords[i].Item1[0], BarCoords[i].Item1[1], false); //Turned off animations due to delay in user input
                         //TouchedBar.Animate().RotationBy(90);
                     }
                 }
