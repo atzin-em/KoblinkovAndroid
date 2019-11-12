@@ -170,6 +170,7 @@ namespace KoblinkovAndroid
                 //Console.WriteLine("This was the coordinate x:{0} y:{1}", RandBar[0], RandBar[1]);
                 RotateBars(RandBar[0], RandBar[1], false);
             }
+           
         }
 
         private void RotateBars(int x, int y, bool AnimateBars)
